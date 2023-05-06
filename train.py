@@ -253,11 +253,15 @@ def main():
 
     train_img_ids, val_img_ids = train_test_split(img_ids, test_size=0.2, random_state=41)
 
+    # train_transform = Compose([
+    #     RandomRotate90(),
+    #     transforms.Flip(),
+    #     Resize(config['input_h'], config['input_w']),
+    #     transforms.Normalize(),
+    # ])
+
     train_transform = Compose([
-        RandomRotate90(),
-        transforms.Flip(),
-        Resize(config['input_h'], config['input_w']),
-        transforms.Normalize(),
+        transforms.Normalize()
     ])
 
     val_transform = Compose([
