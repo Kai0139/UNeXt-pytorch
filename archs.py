@@ -18,7 +18,7 @@ from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 import types
 import math
 from abc import ABCMeta, abstractmethod
-from mmcv.cnn import ConvModule
+# from mmcv.cnn import ConvModule
 import pdb
 
 
@@ -28,12 +28,12 @@ def conv1x1(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=1, bias=False)
 
 
-def shift(dim):
-            x_shift = [ torch.roll(x_c, shift, dim) for x_c, shift in zip(xs, range(-self.pad, self.pad+1))]
-            x_cat = torch.cat(x_shift, 1)
-            x_cat = torch.narrow(x_cat, 2, self.pad, H)
-            x_cat = torch.narrow(x_cat, 3, self.pad, W)
-            return x_cat
+# def shift(dim):
+#     x_shift = [ torch.roll(x_c, shift, dim) for x_c, shift in zip(xs, range(-self.pad, self.pad+1))]
+#     x_cat = torch.cat(x_shift, 1)
+#     x_cat = torch.narrow(x_cat, 2, self.pad, H)
+#     x_cat = torch.narrow(x_cat, 3, self.pad, W)
+#     return x_cat
 
 class shiftmlp(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0., shift_size=5):
