@@ -47,17 +47,32 @@ def main(inputdir, filename, outputfile):
 
         slice_counter = 0
         # iterate through slices
+        n2 = 0
+        n3 = 0
+        n4 = 0
+        n5 = 0
+
+        should_analyze = np.any(image_array)
         for current_slice in range(0, total_slices):
             # alternate slices
             if (slice_counter % 1) == 0:
-                data = np.array(image_array[:, :, current_slice])
+                data = np.array(image_array[:, :, current_slice], dtype=np.uint8)
 
-                print("with non zeros: {}".format(np.any(data)))
-                if(np.any(data)):
+                # print("with non zeros: {}".format(np.any(data)))
+                with_non_zeros = np.any(data)
+                if(with_non_zeros):
                     for r in range(data.shape[0]):
                         for c in range(data.shape[1]):
-                            if data[r, c] != 2.0 and data[r, c] != 0.0 :
-                                print(data[r, c])
+                            pix = data[r, c]
+                            if pix != 0:
+                                if pix == 2:
+                                    n2 += 1
+                                elif pix == 3:
+                                    n3 += 1
+                                elif pix == 4:
+                                    n4 += 1
+                                elif pix == 5:
+                                    n5 += 1
 
                 #alternate slices and save as png
                 if (slice_counter % 1) == 0:
@@ -73,6 +88,8 @@ def main(inputdir, filename, outputfile):
                     # shutil.move(src, outputfile)
                     slice_counter += 1
                     # print('Moved.')
+        if should_analyze:
+            print("n1: {}, n2: {}, n3: {}, n4: {}, n5: {}".format(n1, n2, n3, n4, n5))
 
         # print('Finished converting images')
     else:
@@ -90,5 +107,9 @@ if __name__ == "__main__":
 
     outputdir = label_path + target_folder
 
-    for fn in filenames:
-        main(label_dir, fn, outputdir)
+    # for fn in filenames:
+    #     main(label_dir, fn, outputdir)
+
+    fn = "10000_1000000.nii.gz"
+    main(label_dir, fn, outputdir)
+    
