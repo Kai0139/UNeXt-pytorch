@@ -10,7 +10,7 @@ python3 train.py --dataset ${DATASET_DIR} \
                  --img_ext .png \
                  --mask_ext .png \
                  --lr 0.0001 \
-                 --epochs 500 \
+                 --epochs 100 \
                  --input_w 512 \
                  --input_h 512 \
-                 --b 8
+                 --b 32

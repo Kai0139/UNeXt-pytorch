@@ -12,6 +12,7 @@
 #########################################
 
 import numpy as np
+from colorama import Fore, Style
 import scipy, shutil, os, nibabel
 import sys, getopt
 
@@ -29,7 +30,7 @@ def main(inputdir, filename, outputfile):
     # set fn as your 4d nifti file
     image_array = nibabel.load(inputfile).get_fdata()
     # image_array = numpy.asanyarray(nibabel.load(inputfile))
-    print(image_array.shape)
+    # print(image_array.shape)
 
     # else if 3D image inputted
     if len(image_array.shape) == 3:
@@ -47,49 +48,52 @@ def main(inputdir, filename, outputfile):
 
         slice_counter = 0
         # iterate through slices
-        n2 = 0
-        n3 = 0
-        n4 = 0
-        n5 = 0
 
         should_analyze = np.any(image_array)
         for current_slice in range(0, total_slices):
             # alternate slices
-            if (slice_counter % 1) == 0:
-                data = np.array(image_array[:, :, current_slice], dtype=np.uint8)
+            data = np.array(image_array[:, :, current_slice], dtype=np.uint8)
 
-                # print("with non zeros: {}".format(np.any(data)))
-                with_non_zeros = np.any(data)
-                if(with_non_zeros):
-                    for r in range(data.shape[0]):
-                        for c in range(data.shape[1]):
-                            pix = data[r, c]
-                            if pix != 0:
-                                if pix == 2:
-                                    n2 += 1
-                                elif pix == 3:
-                                    n3 += 1
-                                elif pix == 4:
-                                    n4 += 1
-                                elif pix == 5:
-                                    n5 += 1
+            # print("with non zeros: {}".format(np.any(data)))
+            with_non_zeros = np.any(data)
+            if(with_non_zeros):
+                n2 = 0
+                n3 = 0
+                n4 = 0
+                n5 = 0
+                for r in range(data.shape[0]):
+                    for c in range(data.shape[1]):
+                        pix = data[r, c]
+                        if pix != 0:
+                            if pix == 2:
+                                n2 += 1
+                            elif pix == 3:
+                                n3 += 1
+                            elif pix == 4:
+                                n4 += 1
+                            elif pix == 5:
+                                n5 += 1
 
-                #alternate slices and save as png
-                if (slice_counter % 1) == 0:
-                    # print('Saving image...')
-                    image_name = filename[:-7] + "_z" + "{:0>3}".format(str(current_slice+1))+ ".png"
-                    # imageio.imwrite(image_name, data)
-                    cv2.imwrite(outputfile+image_name, data)
-                    # print('Saved.')
+                l = np.array([n2, n3, n4, n5]) > 0
+                print(sum(l))
+                if sum(l > 1):
+                    print(Fore.RED + "More than one type of label in one slice" + Style.RESET_ALL)
+                
 
-                    #move images to folder
-                    # print('Moving image...')
-                    src = image_name
-                    # shutil.move(src, outputfile)
-                    slice_counter += 1
-                    # print('Moved.')
+                # print('Saving image...')
+                image_name = filename[:-7] + "_z" + "{:0>3}".format(str(current_slice+1))+ ".png"
+                # imageio.imwrite(image_name, data)
+                # cv2.imwrite(outputfile+image_name, data)
+                # print('Saved.')
+
+                #move images to folder
+                # print('Moving image...')
+                src = image_name
+                # shutil.move(src, outputfile)
+                slice_counter += 1
+                # print('Moved.')
         if should_analyze:
-            print("n1: {}, n2: {}, n3: {}, n4: {}, n5: {}".format(n1, n2, n3, n4, n5))
+            print("n2: {}, n3: {}, n4: {}, n5: {}".format(n2, n3, n4, n5))
 
         # print('Finished converting images')
     else:
@@ -107,9 +111,9 @@ if __name__ == "__main__":
 
     outputdir = label_path + target_folder
 
-    # for fn in filenames:
-    #     main(label_dir, fn, outputdir)
+    for fn in filenames:
+        main(label_dir, fn, outputdir)
 
-    fn = "10000_1000000.nii.gz"
-    main(label_dir, fn, outputdir)
+    # fn = "10000_1000000.nii.gz"
+    # main(label_dir, fn, outputdir)
     

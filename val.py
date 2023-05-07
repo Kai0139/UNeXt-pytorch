@@ -96,7 +96,7 @@ def main():
             model = model.cuda()
             # compute output
             output = model(input)
-
+            print(output.shape)
 
             iou,dice = iou_score(output, target)
             iou_avg_meter.update(iou, input.size(0))
