@@ -269,8 +269,15 @@ class UNext(nn.Module):
 
         self.soft = nn.Softmax(dim =1)
 
+        self.printed_shape = False
+        print("arch Unext")
+
     def forward(self, x):
         
+        if not self.printed_shape:
+            print(f"input shape {x.shape}")
+            self.printed_shape = True
+
         B = x.shape[0]
         ### Encoder
         ### Conv Stage
