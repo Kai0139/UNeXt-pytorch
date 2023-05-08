@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('--deep_supervision', default=False, type=str2bool)
     parser.add_argument('--input_channels', default=1, type=int,
                         help='input channels')
-    parser.add_argument('--num_classes', default=1, type=int,
+    parser.add_argument('--num_classes', default=4, type=int,
                         help='number of classes')
     parser.add_argument('--input_w', default=256, type=int,
                         help='image width')
@@ -114,6 +114,7 @@ def train(config, train_loader, model, criterion, optimizer):
 
         # compute output
         if config['deep_supervision']:
+            print(input.shape)
             outputs = model(input)
             loss = 0
             for output in outputs:
@@ -265,8 +266,7 @@ def main():
     ])
 
     val_transform = Compose([
-        Resize(config['input_h'], config['input_w']),
-        transforms.Normalize(),
+        transforms.Normalize()
     ])
 
     train_dataset = Dataset(
@@ -276,7 +276,7 @@ def main():
         img_ext=config['img_ext'],
         mask_ext=config['mask_ext'],
         num_classes=config['num_classes'],
-        transform=train_transform)
+        transform=None)
     val_dataset = Dataset(
         img_ids=val_img_ids,
         img_dir=os.path.join('inputs', config['dataset'], 'images'),
@@ -284,7 +284,7 @@ def main():
         img_ext=config['img_ext'],
         mask_ext=config['mask_ext'],
         num_classes=config['num_classes'],
-        transform=val_transform)
+        transform=None)
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset,

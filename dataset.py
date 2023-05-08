@@ -5,6 +5,10 @@ import numpy as np
 import torch
 import torch.utils.data
 
+import itk
+import nibabel
+
+from colorama import Fore, Style
 
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, img_ids, img_dir, mask_dir, img_ext, mask_ext, num_classes, transform=None):
@@ -53,24 +57,27 @@ class Dataset(torch.utils.data.Dataset):
         return len(self.img_ids)
 
     def __getitem__(self, idx):
+
+        # print(Fore.RED + "Getting item" + Style.RESET_ALL)
         img_id = self.img_ids[idx]
+        # print(f"image id {img_id}")
         
-        img = cv2.imread(os.path.join(self.img_dir, img_id + self.img_ext))
+        # img = cv2.imread(os.path.join(self.img_dir, img_id + self.img_ext))
+
+        img = np.array(itk.imread(os.path.join(self.img_dir, img_id + self.img_ext)), dtype=np.uint8)
 
         mask = []
         for i in range(self.num_classes):
-            mask.append(cv2.imread(os.path.join(self.mask_dir, str(i),
-                        img_id + self.mask_ext), cv2.IMREAD_GRAYSCALE)[..., None])
+            mask.append(np.array(nibabel.load(os.path.join(self.mask_dir, str(i),
+                        img_id + self.mask_ext)).get_fdata())[..., None])
         mask = np.dstack(mask)
-
         if self.transform is not None:
             augmented = self.transform(image=img, mask=mask)
             img = augmented['image']
             mask = augmented['mask']
         
-        img = img.astype('float32') / 255
-        img = img.transpose(2, 0, 1)
-        mask = mask.astype('float32') / 255
-        mask = mask.transpose(2, 0, 1)
-        
+        img = np.array([img.astype('float32') / 255])
+        # img = img.transpose(2, 0, 1)
+        mask = np.array([mask.astype('float32') / 255])
+        # mask = mask.transpose(2, 0, 1)
         return img, mask, {'img_id': img_id}

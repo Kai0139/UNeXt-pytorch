@@ -62,8 +62,7 @@ def main():
     model.eval()
 
     val_transform = Compose([
-        Resize(config['input_h'], config['input_w']),
-        transforms.Normalize(),
+        transforms.Normalize()
     ])
 
     val_dataset = Dataset(

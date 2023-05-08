@@ -1,16 +1,16 @@
 #!/bin/sh
 
-DATASET_DIR=${PWD}/busi_dataset
+DATASET_DIR=${PWD}/picai_dataset
 
 echo $DATASET_DIR
 
 python3 train.py --dataset ${DATASET_DIR} \
-                 --arch UNext \
-                 --name busi \
-                 --img_ext .png \
-                 --mask_ext .png \
+                 --arch UNext3D \
+                 --name picai \
+                 --img_ext .mha \
+                 --mask_ext .nii.gz \
                  --lr 0.0001 \
-                 --epochs 100 \
-                 --input_w 512 \
-                 --input_h 512 \
-                 --b 32
+                 --epochs 200 \
+                 --input_w 256 \
+                 --input_h 256 \
+                 --b 16
