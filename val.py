@@ -114,6 +114,11 @@ def main():
     print('IoU: %.4f' % iou_avg_meter.avg)
     print('Dice: %.4f' % dice_avg_meter.avg)
 
+    total_params = sum(
+        param.numel() for param in model.parameters()
+    )
+    print(f"total params {total_params}")
+
     torch.cuda.empty_cache()
 
 

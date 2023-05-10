@@ -261,6 +261,7 @@ def main():
     # ])
 
     train_transform = Compose([
+        Resize(config['input_h'], config['input_w']),
         transforms.Normalize()
     ])
 
