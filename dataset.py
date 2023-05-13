@@ -74,3 +74,7 @@ class Dataset(torch.utils.data.Dataset):
         mask = mask.transpose(2, 0, 1)
         
         return img, mask, {'img_id': img_id}
+    
+    def apply_filter(self, img):
+        img_filtered = cv2.medianBlur(img, 9)
+        return img_filtered
