@@ -212,10 +212,12 @@ class UNext(nn.Module):
                  attn_drop_rate=0., drop_path_rate=0., norm_layer=nn.LayerNorm,
                  depths=[1, 1, 1], sr_ratios=[8, 4, 2, 1], **kwargs):
         super().__init__()
+
+        self.nn_kernel_size = 3
         
-        self.encoder1 = nn.Conv2d(3, 16, 3, stride=1, padding=1)  
-        self.encoder2 = nn.Conv2d(16, 32, 3, stride=1, padding=1)  
-        self.encoder3 = nn.Conv2d(32, 128, 3, stride=1, padding=1)
+        self.encoder1 = nn.Conv2d(3, 16, self.nn_kernel_size, stride=1, padding=1)  
+        self.encoder2 = nn.Conv2d(16, 32, self.nn_kernel_size, stride=1, padding=1)  
+        self.encoder3 = nn.Conv2d(32, 128, self.nn_kernel_size, stride=1, padding=1)
 
         self.ebn1 = nn.BatchNorm2d(16)
         self.ebn2 = nn.BatchNorm2d(32)
@@ -254,11 +256,11 @@ class UNext(nn.Module):
         self.patch_embed4 = OverlapPatchEmbed(img_size=img_size // 8, patch_size=3, stride=2, in_chans=embed_dims[1],
                                               embed_dim=embed_dims[2])
 
-        self.decoder1 = nn.Conv2d(256, 160, 3, stride=1,padding=1)  
-        self.decoder2 =   nn.Conv2d(160, 128, 3, stride=1, padding=1)  
-        self.decoder3 =   nn.Conv2d(128, 32, 3, stride=1, padding=1) 
-        self.decoder4 =   nn.Conv2d(32, 16, 3, stride=1, padding=1)
-        self.decoder5 =   nn.Conv2d(16, 16, 3, stride=1, padding=1)
+        self.decoder1 = nn.Conv2d(256, 160, self.nn_kernel_size, stride=1,padding=1)  
+        self.decoder2 =   nn.Conv2d(160, 128, self.nn_kernel_size, stride=1, padding=1)  
+        self.decoder3 =   nn.Conv2d(128, 32, self.nn_kernel_size, stride=1, padding=1) 
+        self.decoder4 =   nn.Conv2d(32, 16, self.nn_kernel_size, stride=1, padding=1)
+        self.decoder5 =   nn.Conv2d(16, 16, self.nn_kernel_size, stride=1, padding=1)
 
         self.dbn1 = nn.BatchNorm2d(160)
         self.dbn2 = nn.BatchNorm2d(128)
@@ -346,10 +348,12 @@ class UNext_S(nn.Module):
                  attn_drop_rate=0., drop_path_rate=0., norm_layer=nn.LayerNorm,
                  depths=[1, 1, 1], sr_ratios=[8, 4, 2, 1], **kwargs):
         super().__init__()
+
+        self.nn_kernel_size = 3
         
-        self.encoder1 = nn.Conv2d(3, 8, 3, stride=1, padding=1)  
-        self.encoder2 = nn.Conv2d(8, 16, 3, stride=1, padding=1)  
-        self.encoder3 = nn.Conv2d(16, 32, 3, stride=1, padding=1)
+        self.encoder1 = nn.Conv2d(3, 8, self.nn_kernel_size, stride=1, padding=1)  
+        self.encoder2 = nn.Conv2d(8, 16, self.nn_kernel_size, stride=1, padding=1)  
+        self.encoder3 = nn.Conv2d(16, 32, self.nn_kernel_size, stride=1, padding=1)
 
         self.ebn1 = nn.BatchNorm2d(8)
         self.ebn2 = nn.BatchNorm2d(16)
@@ -383,16 +387,16 @@ class UNext_S(nn.Module):
             drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr[1], norm_layer=norm_layer,
             sr_ratio=sr_ratios[0])])
 
-        self.patch_embed3 = OverlapPatchEmbed(img_size=img_size // 4, patch_size=3, stride=2, in_chans=embed_dims[0],
+        self.patch_embed3 = OverlapPatchEmbed(img_size=img_size // 4, patch_size=self.nn_kernel_size, stride=2, in_chans=embed_dims[0],
                                               embed_dim=embed_dims[1])
-        self.patch_embed4 = OverlapPatchEmbed(img_size=img_size // 8, patch_size=3, stride=2, in_chans=embed_dims[1],
+        self.patch_embed4 = OverlapPatchEmbed(img_size=img_size // 8, patch_size=self.nn_kernel_size, stride=2, in_chans=embed_dims[1],
                                               embed_dim=embed_dims[2])
 
-        self.decoder1 = nn.Conv2d(128, 64, 3, stride=1,padding=1)  
-        self.decoder2 =   nn.Conv2d(64, 32, 3, stride=1, padding=1)  
-        self.decoder3 =   nn.Conv2d(32, 16, 3, stride=1, padding=1) 
-        self.decoder4 =   nn.Conv2d(16, 8, 3, stride=1, padding=1)
-        self.decoder5 =   nn.Conv2d(8, 8, 3, stride=1, padding=1)
+        self.decoder1 = nn.Conv2d(128, 64, self.nn_kernel_size, stride=1,padding=1)  
+        self.decoder2 =   nn.Conv2d(64, 32, self.nn_kernel_size, stride=1, padding=1)  
+        self.decoder3 =   nn.Conv2d(32, 16, self.nn_kernel_size, stride=1, padding=1) 
+        self.decoder4 =   nn.Conv2d(16, 8, self.nn_kernel_size, stride=1, padding=1)
+        self.decoder5 =   nn.Conv2d(8, 8, self.nn_kernel_size, stride=1, padding=1)
 
         self.dbn1 = nn.BatchNorm2d(64)
         self.dbn2 = nn.BatchNorm2d(32)

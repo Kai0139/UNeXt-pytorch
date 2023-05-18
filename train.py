@@ -267,7 +267,7 @@ def main():
 
     val_transform = Compose([
         Resize(config['input_h'], config['input_w']),
-        transforms.Normalize(),
+        transforms.Normalize()
     ])
 
     train_dataset = Dataset(
@@ -285,6 +285,7 @@ def main():
         img_ext=config['img_ext'],
         mask_ext=config['mask_ext'],
         num_classes=config['num_classes'],
+        purpose="val",
         transform=val_transform)
 
     train_loader = torch.utils.data.DataLoader(

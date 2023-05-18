@@ -7,7 +7,7 @@ import torch.utils.data
 
 
 class Dataset(torch.utils.data.Dataset):
-    def __init__(self, img_ids, img_dir, mask_dir, img_ext, mask_ext, num_classes, transform=None):
+    def __init__(self, img_ids, img_dir, mask_dir, img_ext, mask_ext, num_classes, purpose="train", transform=None, target_size=(512, 512)):
         """
         Args:
             img_ids (list): Image ids.
@@ -47,7 +47,9 @@ class Dataset(torch.utils.data.Dataset):
         self.img_ext = img_ext
         self.mask_ext = mask_ext
         self.num_classes = num_classes
+        self.purpose = purpose
         self.transform = transform
+        self.target_size = target_size
 
     def __len__(self):
         return len(self.img_ids)
@@ -56,6 +58,9 @@ class Dataset(torch.utils.data.Dataset):
         img_id = self.img_ids[idx]
         
         img = cv2.imread(os.path.join(self.img_dir, img_id + self.img_ext))
+        img = cv2.resize(img, self.target_size)
+        if self.purpose == "train":
+            img = cv2.medianBlur(img, 5)
 
         mask = []
         for i in range(self.num_classes):
@@ -76,5 +81,5 @@ class Dataset(torch.utils.data.Dataset):
         return img, mask, {'img_id': img_id}
     
     def apply_filter(self, img):
-        img_filtered = cv2.medianBlur(img, 9)
+        img_filtered = cv2.medianBlur(img, 7)
         return img_filtered
